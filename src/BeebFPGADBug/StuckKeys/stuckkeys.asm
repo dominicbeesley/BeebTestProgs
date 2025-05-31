@@ -124,6 +124,7 @@ sulp:
 
 		inc	zp_ctr3
 
+.ifdef LEDS
 		lda	zp_ctr3
 		and	#1
 		asl	A
@@ -138,6 +139,7 @@ sulp:
 		asl	A
 		ora	#7
 		sta	sheila_SYSVIA_orb
+.endif
 
 
 		jmp	mulp

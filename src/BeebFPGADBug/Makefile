@@ -4,7 +4,7 @@ SSD=$(SSDS)/BeebFPGADBug.ssd
 DEPLOY=$(DEPLOY_TOP)/BeebFPGADBug
 
 SUBDIRS=stuckkeys
-OBJS=stuckkeys/stuckkeys.bin 
+OBJS=stuckkeys/stuckkeys_l.bin stuckkeys/stuckkeys_n.bin
 EXTRAS=$(basename $(wildcard extras/*.inf))
 
 OBJS_O=$(addprefix $(BUILD)/, $(OBJS))
@@ -26,7 +26,8 @@ deploy: ssd
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-$(BUILD)/stuckkeys/stuckkeys.bin:
+$(BUILD)/stuckkeys/stuckkeys_l.bin:
+$(BUILD)/stuckkeys/stuckkeys_n.bin:
 	make -C stuckkeys all
 
 $(SSD):	$(OBJS_O)

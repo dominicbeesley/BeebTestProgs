@@ -3,8 +3,7 @@
 AS=ca65 -I $(TOP)/includes 
 LD=ld65
 
-OBJS=stuckkeys
-TARGETS=stuckkeys
+TARGETS=stuckkeys_l stuckkeys_n
 DEPS=
 
 OBJS_O=$(addprefix $(BUILD)/, $(addsuffix .o, $(OBJS)))
@@ -15,11 +14,15 @@ ssd:	all
 deploy:	ssd
 
 
-$(BUILD)/%.o: 	%.asm $(DEPS) $(INCS)
+$(BUILD)/stuckkeys_l.o: stuckkeys.asm $(DEPS) $(INCS)
+	$(AS) -o $@ -g -D LEDS -l $(basename $@).lst $<
+
+$(BUILD)/stuckkeys_n.o: stuckkeys.asm $(DEPS) $(INCS)
 	$(AS) -o $@ -g -l $(basename $@).lst $<
 
-$(BUILD)/%.bin: $(OBJS_O) %.cfg
-	$(LD) -vm -Ln $(basename $@).sy2 -m $(basename $@).map -o $@ -C $(filter %.cfg, $^) $(OBJS_O) $(LIBS)
+
+$(BUILD)/%.bin: $(BUILD)/%.o stuckkeys.cfg
+	$(LD) -vm -Ln $(basename $@).sy2 -m $(basename $@).map -o $@ -C $(filter %.cfg, $^) $(basename $@).o $(LIBS)
 	$(SCRIPTS)/getsymbols.pl <$(basename $@).sy2 >$(basename $@).noi
 	cp $(notdir $@).inf $(BUILD)
 
